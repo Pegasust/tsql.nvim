@@ -1,7 +1,8 @@
 ---@module 'buf_select'
 ---@class mod_buf_select
----@alias MatchPredicate fun(nodes: QNode[]): boolean
 local M = {}
+
+---@alias MatchPredicate fun(nodes: QBuf): boolean
 
 ---@class QBuf
 ---@field bufnr number representing the vim runtime's bufnr, 0 is current buf
@@ -71,7 +72,7 @@ M.buf_match = {}
 ---@field not_ fun(self): BufMatch
 ---@field or_ fun(self, q: BufMatch): BufMatch
 ---@field then_ fun(self, q: BufMatch): BufMatch
----@field filter_on fun(self, q: QNode[]): QNode[]
+---@field filter_on fun(self, q: QBuf[]): QBuf[]
 M.BufMatch = {}
 
 function M.buf_match.is_loaded()

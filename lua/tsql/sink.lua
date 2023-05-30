@@ -1,6 +1,5 @@
 local M = {}
 
----@class Sink
 M.Sink = {}
 
 function M.print()

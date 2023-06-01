@@ -104,6 +104,10 @@ function M.buf_match.filetype(...)
     end)
 end
 
+function M.buf_match.any()
+    return M.BufMatch.new(function(_) return true end)
+end
+
 ---@vararg string OR for path
 ---@return BufMatch
 function M.buf_match.path(...)

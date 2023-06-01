@@ -17,10 +17,20 @@ M.sink_by = {}
 ---@alias Format fun(nodes: QNode[]): string
 M.format = {}
 
+M.format.default = M.format.display
+
 ---@class Sink
 ---@field sink fun(self, nodes: QNode[])
 M.Sink = {}
 M.Sink.__index = M.Sink
+
+---@return Sink
+---@param func fun(self, nodes:QNode[])
+function M.sink_by.pure_fn(func)
+    return setmetatable({
+        sink = func
+    }, M.Sink)
+end
 
 ---@return Sink
 function M.sink_by.highlight()
@@ -72,9 +82,14 @@ function M.format.dump(nodes)
     return vim.inspect(nodes, { newline = '\n', indent = '  ' })
 end
 
----@param format Format
+M.format.debug = M.format.dump
+
+---@param format Format | nil
 ---@return Sink
 function M.sink_by.print(format)
+    if format == nil then
+        format = M.format.default
+    end
     return setmetatable({
         ---@type fun(nodes: QNode[])
         sink = function(nodes)
@@ -86,6 +101,9 @@ end
 ---@param format Format
 ---@return Sink
 function M.sink_by.nvim_yank_buf(format)
+    if format == nil then
+        format = M.format.default
+    end
     return setmetatable({
         ---@type fun(nodes: QNode[])
         sink = function(nodes)
@@ -209,6 +227,9 @@ function M.setup(config)
     M.config.nvim_ns = vim.api.nvim_create_namespace("tsql")
 
     vim.api.nvim_create_user_command("Noh", M.clear_highlights)
+    vim.api.nvim_create_user_command("Tdsl", function(cmd)
+        M.s(cmd.args):do_nvim(M.store)
+    end)
 
     M.store = M.Store:new()
 end

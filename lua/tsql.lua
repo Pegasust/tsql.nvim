@@ -226,10 +226,10 @@ function M.setup(config)
     M.config = vim.tbl_deep_extend("force", M.config, config or M.config_default)
     M.config.nvim_ns = vim.api.nvim_create_namespace("tsql")
 
-    vim.api.nvim_create_user_command("Noh", M.clear_highlights)
+    vim.api.nvim_create_user_command("Noh", M.clear_highlights, { nargs = "0", desc = "Clear tsql highlights" })
     vim.api.nvim_create_user_command("Tdsl", function(cmd)
         M.s(cmd.args):do_nvim(M.store)
-    end)
+    end, { nargs = "*", desc = "tsql DSL invocation" })
 
     M.store = M.Store:new()
 end
